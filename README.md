@@ -17,6 +17,20 @@ Pick the channel your agent already uses. All of them deliver the same skill fol
 
 On ClawHub both skills are published under the [`@skilder`](https://clawhub.ai) publisher: `connect-to-skilder` and `import-skills-to-skilder`.
 
+## Connect your agent
+
+One command registers the Skilder MCP server; the first call opens a browser OAuth sign-in.
+
+```bash
+# Claude Code
+claude mcp add skilder-ai --transport http https://app.skilder.ai/mcp
+
+# Codex
+codex mcp add skilder-ai --url https://app.skilder.ai/mcp
+```
+
+Every other MCP-capable host works too: point it at `https://app.skilder.ai/mcp` with the streamable-http transport, or paste the `connect-to-skilder` skill into the agent's chat and let it configure itself.
+
 ## Skills
 
 | Skill | What it does |
@@ -56,7 +70,7 @@ flowchart LR
     CONN --> EXT
 ```
 
-1. An agent connects once to `https://app.skilder.ai/mcp` over Streamable HTTP and signs in with OAuth. In Claude Code that is a single command: `claude mcp add --transport http skilder https://app.skilder.ai/mcp`.
+1. An agent connects once to `https://app.skilder.ai/mcp` over Streamable HTTP and signs in with OAuth (see [Connect your agent](#connect-your-agent) for the Claude Code and Codex one-liners).
 2. `init_skilder` returns the workspace catalog: the Roles an agent can take on and the Skills behind them.
 3. The agent loads a skill's instructions on demand, at the moment a task calls for it.
 4. When a skill uses a tool, Skilder routes the call to the connected MCP server, applies workspace permissions, and records the run per skill and session for measurement and audit.
