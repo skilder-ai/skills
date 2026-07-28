@@ -1,6 +1,6 @@
 # Skilder Skills
 
-Agent Skills published by [Skilder](https://skilder.ai), the skills infrastructure platform for AI agents. Skilder runs the lifecycle behind a team's skills and MCP tools: versioning, publish and rollback, per-skill usage measurement, and distribution to every connected agent from a single MCP endpoint.
+[Skilder](https://skilder.ai) runs the lifecycle behind a team's skills and MCP tools: versioning, publish and rollback, per-skill usage measurement, and distribution to every connected agent from a single MCP endpoint.
 
 Every skill in this repo uses the open [Agent Skills](https://agentskills.io) format: a folder with a `SKILL.md` plus optional reference files, portable across any compliant agent.
 
