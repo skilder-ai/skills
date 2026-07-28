@@ -4,7 +4,16 @@ Agent Skills published by [Skilder](https://skilder.ai), the skills infrastructu
 
 Every skill in this repo uses the open [Agent Skills](https://agentskills.io) format: a folder with a `SKILL.md` plus optional reference files, portable across any compliant agent.
 
-## Install
+## The skills
+
+| Skill | What it does |
+|---|---|
+| [`connect-to-skilder`](skills/connect-to-skilder) | One-shot instruction that makes an agent connect itself to Skilder over MCP (OAuth, zero config). Paste it into any agent chat once. |
+| [`import-skills-to-skilder`](skills/import-skills-to-skilder) | Scan the Agent Skills already on this machine or repo and import them into your Skilder workspace, as-is, so every connected agent on the team can run them. |
+
+A typical first run chains them: paste `connect-to-skilder` into an agent chat, the agent registers `https://app.skilder.ai/mcp` and completes OAuth in your browser, then `import-skills-to-skilder` moves the skills already on that machine into the workspace, where the rest of the team's agents can discover and run them.
+
+## Get the skills
 
 Pick the channel your agent already uses. All of them deliver the same skill folders.
 
@@ -17,9 +26,9 @@ Pick the channel your agent already uses. All of them deliver the same skill fol
 
 On ClawHub both skills are published under the [`@skilder`](https://clawhub.ai) publisher: `connect-to-skilder` and `import-skills-to-skilder`.
 
-## Connect your agent
+## Prefer to connect by hand?
 
-One command registers the Skilder MCP server; the first call opens a browser OAuth sign-in.
+`connect-to-skilder` exists so an agent can run this step itself, and so you can hand the connect step to teammates as a file. The manual equivalent is one entry in your client. Either path ends at the same place: the first call to the server opens a browser OAuth sign-in.
 
 ```bash
 # Claude Code
@@ -55,16 +64,7 @@ VS Code (`.vscode/mcp.json`) uses `servers` as the top-level key with the same e
 }
 ```
 
-Every other MCP-capable host works too: point it at `https://app.skilder.ai/mcp` with the streamable-http transport, or paste the `connect-to-skilder` skill into the agent's chat and let it configure itself.
-
-## Skills
-
-| Skill | What it does |
-|---|---|
-| [`connect-to-skilder`](skills/connect-to-skilder) | One-shot instruction that makes an agent connect itself to Skilder over MCP (OAuth, zero config). Paste it into any agent chat once. |
-| [`import-skills-to-skilder`](skills/import-skills-to-skilder) | Scan the Agent Skills already on this machine or repo and import them into your Skilder workspace, as-is, so every connected agent on the team can run them. |
-
-A typical first run chains them: paste `connect-to-skilder` into an agent chat, the agent registers `https://app.skilder.ai/mcp` and completes OAuth in your browser, then `import-skills-to-skilder` moves the skills already on that machine into the workspace, where the rest of the team's agents can discover and run them.
+Any other MCP-capable host: point it at `https://app.skilder.ai/mcp` with the streamable-http transport.
 
 ## How it fits together
 
@@ -96,7 +96,7 @@ flowchart LR
     CONN --> EXT
 ```
 
-1. An agent connects once to `https://app.skilder.ai/mcp` over Streamable HTTP and signs in with OAuth (see [Connect your agent](#connect-your-agent) for the Claude Code and Codex one-liners).
+1. An agent connects once to `https://app.skilder.ai/mcp` over Streamable HTTP and signs in with OAuth, either by running `connect-to-skilder` or via the [manual one-liners](#prefer-to-connect-by-hand).
 2. `init_skilder` returns the workspace catalog: the Roles an agent can take on and the Skills behind them.
 3. The agent loads a skill's instructions on demand, at the moment a task calls for it.
 4. When a skill uses a tool, Skilder routes the call to the connected MCP server, applies workspace permissions, and records the run per skill and session for measurement and audit.
