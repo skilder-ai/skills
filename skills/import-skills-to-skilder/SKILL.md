@@ -1,6 +1,8 @@
 ---
 name: import-skills-to-skilder
 description: Import the Agent Skills already present on this machine or in this repo into a Skilder workspace, so the whole team's agents can discover and run them from one governed endpoint. Trigger on requests like "import my skills to Skilder", "publish these skills to my team", "get my local skills into Skilder", "centralize our agent skills".
+version: 1.0.0
+homepage: https://github.com/skilder-ai/skills
 ---
 
 Move the user's existing local Agent Skills into their Skilder workspace. Skills use the open Agent Skills format on both sides, so content imports as-is: frontmatter and body stay what they are.

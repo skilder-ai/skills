@@ -1,6 +1,8 @@
 ---
 name: connect-to-skilder
 description: One-shot instruction to connect this AI agent to Skilder over MCP using the official remote endpoint and OAuth. Paste this whole skill into an agent's chat once. It should act on it immediately, without asking the user anything first.
+version: 1.0.0
+homepage: https://github.com/skilder-ai/skills
 ---
 
 You've just been handed this as a one-time instruction. Proceed automatically. Don't
