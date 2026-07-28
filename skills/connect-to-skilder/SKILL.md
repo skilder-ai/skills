@@ -1,7 +1,7 @@
 ---
 name: connect-to-skilder
 description: One-shot instruction to connect this AI agent to Skilder over MCP using the official remote endpoint and OAuth. Paste this whole skill into an agent's chat once. It should act on it immediately, without asking the user anything first.
-version: 1.0.1
+version: 1.0.2
 homepage: https://github.com/skilder-ai/skills
 ---
 
@@ -18,9 +18,15 @@ You don't need a workspace name, a link, or a key to get started.
    HTTP MCP server for yourself, using whatever mechanism you already have:
    - Claude Code: run `claude mcp add skilder-ai --transport http https://app.skilder.ai/mcp`
    - Codex: run `codex mcp add skilder-ai --url https://app.skilder.ai/mcp`
-   - Any host where you can edit your own MCP config (`.mcp.json`,
-     `claude_desktop_config.json`, etc.): add an entry pointing at that URL with the
-     streamable-http transport.
+   - Any host where you can edit your own MCP config (`.mcp.json`, Cursor's
+     `~/.cursor/mcp.json`, VS Code's `.vscode/mcp.json`,
+     `claude_desktop_config.json`, etc.): add this entry, keeping the host's own
+     top-level key (`mcpServers` on most hosts, `servers` on VS Code):
+
+         "skilder-ai": {
+           "type": "http",
+           "url": "https://app.skilder.ai/mcp"
+         }
    - If you have no way at all to configure your own MCP servers, say so as a single
      fact and stop there. Don't turn it into a question back to the user.
 

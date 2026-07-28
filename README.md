@@ -29,6 +29,32 @@ claude mcp add skilder-ai --transport http https://app.skilder.ai/mcp
 codex mcp add skilder-ai --url https://app.skilder.ai/mcp
 ```
 
+Clients configured through a JSON file take the same entry. Cursor (`~/.cursor/mcp.json`) and most other hosts nest it under `mcpServers`:
+
+```json
+{
+  "mcpServers": {
+    "skilder-ai": {
+      "type": "http",
+      "url": "https://app.skilder.ai/mcp"
+    }
+  }
+}
+```
+
+VS Code (`.vscode/mcp.json`) uses `servers` as the top-level key with the same entry:
+
+```json
+{
+  "servers": {
+    "skilder-ai": {
+      "type": "http",
+      "url": "https://app.skilder.ai/mcp"
+    }
+  }
+}
+```
+
 Every other MCP-capable host works too: point it at `https://app.skilder.ai/mcp` with the streamable-http transport, or paste the `connect-to-skilder` skill into the agent's chat and let it configure itself.
 
 ## Skills
