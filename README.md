@@ -8,7 +8,19 @@ npx skills add skilder-ai/skills
 
 One command installs both skills below into your agent, straight from [skills.sh](https://skills.sh/skilder-ai/skills). Then ask your agent to connect to Skilder and it takes care of the rest.
 
-[Skilder](https://skilder.ai) runs the lifecycle behind a team's skills and MCP tools: versioning, publish and rollback, per-skill usage measurement, and distribution to every connected agent from a single MCP endpoint.
+## The problem this solves
+
+Skills and MCP tools are coupled to the agent they were installed in. Every new client, machine, or teammate means rebuilding the same setup, and every change means touching every copy.
+
+[Skilder](https://skilder.ai) decouples capabilities from the agent. Skills and MCP tools live in a graph database as portable units that compose into roles, with their own lifecycle: versioned, published, rolled back independently of any agent or model. Distribution is just in time: an agent connects once to its MCP endpoint, discovers what's published, and loads a capability at the moment a task calls for it.
+
+**What you gain:**
+
+- **No more tool context bloat.** Agents see a catalog and pull a capability's full instructions only when a task needs them, instead of preloading every tool definition.
+- **One version of truth, instantly updated.** Publish a change once; every connected agent resolves the same published version from its next session.
+- **Metrics at skill and tool level.** Every run is recorded per skill, tool, and session, so usage is measurable instead of invisible.
+- **No orchestration token overhead.** Multi-step work can run as scripts inside Skilder, chaining tools server-side instead of round-tripping every call through the model.
+- **Built-in permissions.** Tool calls execute through Skilder under team permissions, with credentials held centrally; an agent never carries a secret.
 
 Every skill in this repo uses the open [Agent Skills](https://agentskills.io) format: a folder with a `SKILL.md` plus optional reference files, portable across any compliant agent.
 
@@ -108,13 +120,6 @@ flowchart LR
 2. `init_skilder` returns the workspace catalog: the Roles an agent can take on and the Skills behind them.
 3. The agent loads a skill's instructions on demand, at the moment a task calls for it.
 4. When a skill uses a tool, Skilder routes the call to the connected MCP server, applies workspace permissions, and records the run per skill and session for measurement and audit.
-
-## Why route this through Skilder
-
-- **One endpoint instead of per-agent config.** Connect each agent once; every skill and tool the workspace publishes after that reaches it without touching the agent again.
-- **A release cycle for skills.** Draft, publish, and roll back skill versions centrally; agents always resolve the published version.
-- **Usage you can inspect.** Every skill run and tool call is attributed to a skill, session, and workspace, so you can see what your agents actually use.
-- **Portability both ways.** Skills enter and leave in the open Agent Skills format; existing skill folders import verbatim, and anything in the workspace stays exportable.
 
 Docs: [docs.skilder.ai](https://docs.skilder.ai) · Support: contact@skilder.ai
 
