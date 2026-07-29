@@ -1,5 +1,13 @@
 # Skilder Skills
 
+[![Live on skills.sh](https://img.shields.io/badge/skills.sh-skilder--ai%2Fskills-0e7490)](https://skills.sh/skilder-ai/skills)
+
+```bash
+npx skills add skilder-ai/skills
+```
+
+One command installs both skills below into your agent, straight from [skills.sh](https://skills.sh/skilder-ai/skills). Then ask your agent to connect to Skilder and it takes care of the rest.
+
 [Skilder](https://skilder.ai) runs the lifecycle behind a team's skills and MCP tools: versioning, publish and rollback, per-skill usage measurement, and distribution to every connected agent from a single MCP endpoint.
 
 Every skill in this repo uses the open [Agent Skills](https://agentskills.io) format: a folder with a `SKILL.md` plus optional reference files, portable across any compliant agent.
