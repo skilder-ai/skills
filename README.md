@@ -1,4 +1,4 @@
-# Skilder - Operating System for Agent Plugins, Skills and Tools.
+# Skilder - Lifecycle management for Agent Plugins
 
 [![Live on skills.sh](https://img.shields.io/badge/skills.sh-skilder--ai%2Fskills-0e7490)](https://skills.sh/skilder-ai/skills)
 
@@ -10,19 +10,24 @@ One command installs both skills below into your agent, straight from [skills.sh
 
 ## The problem this solves
 
-Skills and MCP tools are coupled to the agent they were installed in. Every new client, machine, or teammate means rebuilding the same setup, and every change means touching every copy.
+The industry just aligned on how to package agent capabilities: the [Agent Plugins](https://agent-plugins.org) standard bundles [Agent Skills](https://agentskills.io) and MCP server configurations into one portable format. Build once, load into any compliant client.
 
-[Skilder](https://skilder.ai) decouples capabilities from the agent. Skills and MCP tools live in a graph database as portable units that compose into roles, with their own lifecycle: versioned, published, rolled back independently of any agent or model. Distribution is just in time: an agent connects once to its MCP endpoint, discovers what's published, and loads a capability at the moment a task calls for it.
+The standard is deliberately minimal. It defines the package and leaves the rest out of scope: distribution, updates, permissions, telemetry, deprecation. The moment plugins are shared across a machine, a team, or a company, that entire lifecycle becomes your problem.
+
+[Skilder](https://skilder.ai) is that layer. Plugins live in a graph registry as governed units, composed of skills and MCP tool connections, with their own lifecycle: versioned, published, rolled back independently of any agent or model. Distribution is just in time: an agent connects once to its MCP endpoint, discovers what's published for it, and loads a capability at the moment a task calls for it.
+
+The spec defines the package. Skilder runs it.
 
 **What you gain:**
 
-- **No more tool context bloat.** Agents see a catalog and pull a capability's full instructions only when a task needs them, instead of preloading every tool definition.
-- **One version of truth, instantly updated.** Publish a change once; every connected agent resolves the same published version from its next session.
-- **Metrics at skill and tool level.** Every run is recorded per skill, tool, and session, so usage is measurable instead of invisible.
+- **No more tool context bloat.** Agents see a catalog and pull a plugin's full instructions only when a task needs them, instead of preloading every tool definition.
 - **No orchestration token overhead.** Multi-step work can run as scripts inside Skilder, chaining tools server-side instead of round-tripping every call through the model.
+- **One version of truth, instantly updated.** Publish a change once; every connected agent resolves the same published version from its next session.
 - **Built-in permissions.** Tool calls execute through Skilder under team permissions, with credentials held centrally; an agent never carries a secret.
+- **Execution where your data lives.** Tool calls run through Skilder runtimes deployed where you choose: our cloud, your VPC, on-prem, or a developer machine. Internal systems stay internal; the agent only ever talks to the endpoint.
+- **Metrics at plugin, skill and tool level.** Every run is recorded per skill, tool, and session, so usage is measurable instead of invisible.
 
-Every skill in this repo uses the open [Agent Skills](https://agentskills.io) format: a folder with a `SKILL.md` plus optional reference files, portable across any compliant agent.
+Every skill in this repo uses the open [Agent Skills](https://agentskills.io) format, the same building block the Agent Plugins standard packages: a folder with a `SKILL.md` plus optional reference files, portable across any compliant agent.
 
 ## The skills
 
@@ -96,32 +101,27 @@ flowchart LR
         HA["Hermes"]
         ANY["any MCP-capable host"]
     end
-
-    subgraph skilder["Skilder workspace"]
+    subgraph skilder["Skilder registry"]
         EP["MCP endpoint<br/>app.skilder.ai/mcp"]
-        ROLES["Roles"]
-        SKILLS["Skills<br/>versioned + published"]
+        PLUGINS["Plugins<br/>skills + tool connections<br/>versioned + published"]
         CONN["MCP tool connections"]
     end
-
     EXT[("External MCP servers<br/>GitHub, Slack, databases,<br/>internal APIs")]
-
     CC --> EP
     OC --> EP
     HA --> EP
     ANY --> EP
-    EP -->|"discover roles + skills"| ROLES
-    ROLES --> SKILLS
-    SKILLS -->|"tool calls"| CONN
+    EP -->|"discover what's published,<br/>assigned by role"| PLUGINS
+    PLUGINS -->|"tool calls"| CONN
     CONN --> EXT
 ```
 
 1. An agent connects once to `https://app.skilder.ai/mcp` over Streamable HTTP and signs in with OAuth, either by running `connect-to-skilder` or via the [manual one-liners](#prefer-to-connect-by-hand).
-2. `init_skilder` returns the workspace catalog: the Roles an agent can take on and the Skills behind them.
+2. `init_skilder` returns the workspace catalog: the plugins published for this agent, grouped by role, the job function an agent takes on, like "Sales Rep" or "Support".
 3. The agent loads a skill's instructions on demand, at the moment a task calls for it.
 4. When a skill uses a tool, Skilder routes the call to the connected MCP server, applies workspace permissions, and records the run per skill and session for measurement and audit.
 
-Docs: [docs.skilder.ai](https://docs.skilder.ai) · Support: contact@skilder.ai
+Docs: [docs.skilder.ai](https://docs.skilder.ai) · Support: hello@skilder.ai
 
 ## License
 
