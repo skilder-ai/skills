@@ -1,4 +1,4 @@
-# Skilder Skills
+# Skilder - Operating System for Agent Plugins, Skills and Tools.
 
 [![Live on skills.sh](https://img.shields.io/badge/skills.sh-skilder--ai%2Fskills-0e7490)](https://skills.sh/skilder-ai/skills)
 
