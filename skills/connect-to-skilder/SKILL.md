@@ -21,15 +21,11 @@ Connect this agent to the user's Skilder workspace. One endpoint, one browser si
 | Credential | Issued to the MCP client after approval and stored by the client. This agent never sees, stores or forwards it. |
 | What flows out | The tool calls this agent makes against the chosen workspace, recorded there for the workspace admins. |
 | What flows in | The roles and skills the workspace's own admins published for it. Workspace content, available only after approval. |
-| Revoke | Remove the server entry from the client configuration. The stored grant expires on its own within 14 days. |
+| Revoke | Remove the server entry from the client configuration; that client then stops using the grant. A grant that goes unused lapses on its own after 14 days. |
 
 ## Step 0: already connected?
 
-Skip to Step 3 when the tool list already contains Skilder's session tool:
-
-```
-init_skilder
-```
+Skip to Step 3 when the available tools already include one from Skilder (the session-initialisation tool that lists the workspace's roles).
 
 ## Step 1: confirm once
 
@@ -56,11 +52,13 @@ Clients configured by file (`.mcp.json`, Cursor's `~/.cursor/mcp.json`, VS Code'
 }
 ```
 
+The server becomes available when the client next starts or reconnects. If it is not listed yet, tell the user a restart is needed.
+
 A client with no way to configure MCP servers cannot connect. State that and stop.
 
 ## Step 3: sign in and report
 
-The first request to the server (listing its tools is enough) redirects to the browser sign-in, which the user completes. Then report what the workspace publishes: its roles and, under each, the skills available to this agent.
+Once the server is added, the client's first connection to it opens the browser sign-in, which the user completes. Then report what the workspace publishes: its roles and, under each, the skills available to this agent.
 
 ## Fallback: no browser redirect
 
