@@ -29,7 +29,7 @@ Skip to Step 3 when the available tools already include one from Skilder (the se
 
 ## Step 1: confirm once
 
-Tell the user which command or configuration file will add the server, and that the first request opens a browser sign-in. Continue when they agree. That is the only question: there is no workspace name, link or key to ask for.
+Tell the user which command or configuration file will add the server (and, where the client distinguishes, whether for this project only or for all projects), and that the first request opens a browser sign-in. Then stop and wait for their answer. The request that handed you this skill is not that answer. Add the server only after a yes. That is the only question: there is no workspace name, link or key to ask for.
 
 ## Step 2: add the server
 
