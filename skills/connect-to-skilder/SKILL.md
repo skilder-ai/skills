@@ -1,46 +1,67 @@
 ---
 name: connect-to-skilder
-description: One-shot instruction to connect this AI agent to Skilder over MCP using the official remote endpoint and OAuth. Paste this whole skill into an agent's chat once. It should act on it immediately, without asking the user anything first.
-version: 1.0.2
+description: Connect this agent to the user's Skilder workspace over MCP with a browser OAuth sign-in. Checks whether Skilder is already connected, asks once before adding the server to the MCP client configuration, then reports the roles and skills the workspace publishes. Trigger on "connect to Skilder", "set up Skilder", "add the Skilder MCP server".
+version: 2.0.0
 homepage: https://github.com/skilder-ai/skills
+metadata:
+  endpoint: https://app.skilder.ai/mcp
+  transport: streamable-http
+  auth: OAuth 2.1 with browser consent
+  operator: skilder.ai SA
 ---
 
-You've just been handed this as a one-time instruction. Proceed automatically. Don't
-ask the user any clarifying questions first. The endpoint is fixed and already known:
+Connect this agent to the user's Skilder workspace. One endpoint, one browser sign-in, no workspace name or key to collect.
 
-    https://app.skilder.ai/mcp
+## What the connection is
 
-You don't need a workspace name, a link, or a key to get started.
+| | |
+|---|---|
+| Server | `https://app.skilder.ai/mcp`, Streamable HTTP, operated by skilder.ai SA ([privacy](https://www.skilder.ai/en/privacy), [terms](https://www.skilder.ai/en/terms)). |
+| Sign-in | The first request opens a browser page on app.skilder.ai. The user signs in, picks one workspace and presses Approve. Nothing is granted before that press. |
+| Credential | Issued to the MCP client after approval and stored by the client. This agent never sees, stores or forwards it. |
+| What flows out | The tool calls this agent makes against the chosen workspace, recorded there for the workspace admins. |
+| What flows in | The roles and skills the workspace's own admins published for it. Workspace content, available only after approval. |
+| Revoke | Remove the server entry from the client configuration. The stored grant expires on its own within 14 days. |
 
-## Do this now
+## Step 0: already connected?
 
-1. **Register the server.** Add `https://app.skilder.ai/mcp` as a remote Streamable
-   HTTP MCP server for yourself, using whatever mechanism you already have:
-   - Claude Code: run `claude mcp add skilder-ai --transport http https://app.skilder.ai/mcp`
-   - Codex: run `codex mcp add skilder-ai --url https://app.skilder.ai/mcp`
-   - Any host where you can edit your own MCP config (`.mcp.json`, Cursor's
-     `~/.cursor/mcp.json`, VS Code's `.vscode/mcp.json`,
-     `claude_desktop_config.json`, etc.): add this entry, keeping the host's own
-     top-level key (`mcpServers` on most hosts, `servers` on VS Code):
+Skip to Step 3 when the tool list already contains Skilder's session tool:
 
-         "skilder-ai": {
-           "type": "http",
-           "url": "https://app.skilder.ai/mcp"
-         }
-   - If you have no way at all to configure your own MCP servers, say so as a single
-     fact and stop there. Don't turn it into a question back to the user.
+```
+init_skilder
+```
 
-2. **Trigger the connection.** Call the server right away (e.g. `tools/list`). This
-   is expected to redirect through a one-time browser sign-in to Skilder. That's
-   the OAuth handshake, and approving it is the only step a human touches. Don't ask
-   permission to attempt this; just do it and report what happens.
+## Step 1: confirm once
 
-3. **Confirm and report.** Once connected, list what the server now exposes, and
-   tell the user which Roles and Skills are available. Don't wait to be asked.
+Tell the user which command or configuration file will add the server, and that the first request opens a browser sign-in. Continue when they agree. That is the only question: there is no workspace name, link or key to ask for.
 
-4. **Only if OAuth genuinely isn't possible** in your environment (no browser
-   redirect support at all): say so, then fall back to the key-based config from
-   Skilder's Connect page → Advanced. That does require a key from the user, the
-   one unavoidable exception to "don't ask."
+## Step 2: add the server
 
-That's it: one endpoint, no setup questions, act now.
+Use the client's own mechanism. The entry is the same everywhere.
+
+```bash
+# Claude Code
+claude mcp add skilder-ai --transport http https://app.skilder.ai/mcp
+
+# Codex
+codex mcp add skilder-ai --url https://app.skilder.ai/mcp
+```
+
+Clients configured by file (`.mcp.json`, Cursor's `~/.cursor/mcp.json`, VS Code's `.vscode/mcp.json`, `claude_desktop_config.json`) take this entry under the host's own top-level key (`mcpServers` on most hosts, `servers` on VS Code):
+
+```json
+"skilder-ai": {
+  "type": "http",
+  "url": "https://app.skilder.ai/mcp"
+}
+```
+
+A client with no way to configure MCP servers cannot connect. State that and stop.
+
+## Step 3: sign in and report
+
+The first request to the server (listing its tools is enough) redirects to the browser sign-in, which the user completes. Then report what the workspace publishes: its roles and, under each, the skills available to this agent.
+
+## Fallback: no browser redirect
+
+A client that cannot follow a browser redirect connects with a key instead, from Skilder's Connect page → Advanced. The key comes from the user.

@@ -33,7 +33,7 @@ Every skill in this repo uses the open [Agent Skills](https://agentskills.io) fo
 
 | Skill | What it does |
 |---|---|
-| [`connect-to-skilder`](skills/connect-to-skilder) | One-shot instruction that makes an agent connect itself to Skilder over MCP (OAuth, zero config). Paste it into any agent chat once. |
+| [`connect-to-skilder`](skills/connect-to-skilder) | Connects an agent to Skilder over MCP: discloses what the connection is, asks once before adding the server, then a browser OAuth sign-in. Paste it into any agent chat once. |
 | [`import-skills-to-skilder`](skills/import-skills-to-skilder) | Scan the Agent Skills already on this machine or repo and import them into your Skilder workspace, as-is, so every connected agent on the team can run them. |
 
 A typical first run chains them: paste `connect-to-skilder` into an agent chat, the agent registers `https://app.skilder.ai/mcp` and completes OAuth in your browser, then `import-skills-to-skilder` moves the skills already on that machine into the workspace, where the rest of the team's agents can discover and run them.
